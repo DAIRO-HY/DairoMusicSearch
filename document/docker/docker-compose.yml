@@ -14,11 +14,11 @@ services:
       #解决控制台输出中文乱码
       LANG: C.UTF-8
 
-      #NPS主机
-      NPC_HOST: www.****.com
-      #客户端KEY
-      NPC_KEY: xxxxxxxxxx
-      #TCP端口
-      NPC_TCP: 1781
-      #UDP端口
-      NPC_UDP: 1782
+      #谷歌开发者KEY
+      GOOGLE_API_KEY: www.****.com
+      #临时文件路径
+      CACHE_FOLDER: "./temp"
+      #允许同时下载线程数
+      MAX_DOWNLOAD_THREAD_COUNT: 1
+      #WEB端口
+      WEB_PORT: 8021

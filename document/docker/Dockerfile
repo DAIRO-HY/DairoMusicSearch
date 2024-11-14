@@ -28,10 +28,15 @@ COPY dairo-music-search-linux-amd64 /app/dairo-music-search-linux-amd64
 RUN chmod +x dairo-music-search-linux-amd64
 
 # 定义运行时的环境变量
-ENV NPC_HOST=127.0.0.1
-ENV NPC_KEY=xxxxxxxxx
-ENV NPC_TCP=1781
-ENV NPC_UDP=1782
+
+#谷歌开发者KEY
+ENV GOOGLE_API_KEY=xxxxxxxxxxxxx
+#临时文件路径
+ENV CACHE_FOLDER=./temp
+#允许同时下载线程数
+ENV MAX_DOWNLOAD_THREAD_COUNT=1
+#WEB端口
+ENV WEB_PORT=8021
 
 #启动脚本
-ENTRYPOINT /app/dairo-music-search-linux-amd64 -h:$NPC_HOST -k:$NPC_KEY -t:$NPC_TCP -u:$NPC_UDP
+ENTRYPOINT /app/dairo-music-search-linux-amd64 -GoogleApiKey:$GOOGLE_API_KEY -CacheFolder:$CACHE_FOLDER -MaxDownloadThreadCount:$MAX_DOWNLOAD_THREAD_COUNT -WebPort:$WEB_PORT

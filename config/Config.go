@@ -6,7 +6,7 @@ const VERSION = "1.0.0"
 // 谷歌开发者KEY
 var GoogleApiKey = ""
 
-// 文件路径
+// 临时文件路径
 var CacheFolder = "./temp"
 
 // 允许同时下载线程数
