@@ -13,14 +13,6 @@ ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp /usr/local/
 RUN chmod a+rx /usr/local/bin/yt-dlp
 #####################################################################安装YT-DLP#######################################END
 
-#https://github.com/yt-dlp/yt-dlp
-#####################################################################安装YT-DLP#####################################START
-RUN yes|apt-get install python3
-RUN ln -s /usr/bin/python3 /usr/bin/python
-ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp /usr/local/bin/yt-dlp
-RUN chmod a+rx /usr/local/bin/yt-dlp
-#####################################################################安装YT-DLP#######################################END
-
 
 #YT-DLP依赖ffmpeg
 RUN yes|apt-get -y install ffmpeg
