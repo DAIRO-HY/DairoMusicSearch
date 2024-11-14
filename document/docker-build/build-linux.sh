@@ -56,7 +56,7 @@ GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w" -o ./build/dair
 #编译mac-arm64
 GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="-s -w" -o ./build/dairo-music-search-mac-arm64
 
-if [ ! -e "./build/dairo--music-search-arm64" ]; then
+if [ ! -e "./build/dairo-music-search-mac-arm64" ]; then
     echo "编译失败"
     exit 1
 fi
