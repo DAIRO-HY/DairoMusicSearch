@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="/image/dairo-music-logo1-32.png" sizes="32x32"/>
+    <link rel="apple-touch-icon" href="/image/dairo-music-logo1-48.png" sizes="48x48"/>
+    <link rel="apple-touch-icon" href="/image/dairo-music-logo1-72.png" sizes="72x72" />
+    <link rel="apple-touch-icon" href="/image/dairo-music-logo1-114.png" sizes="114x114"/>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <title>dairo-mp3</title>
+    <style>
+        .bg {
+            background: #001d4b;
+            background: -moz-radial-gradient(0% 100%, ellipse cover, rgba(104, 128, 138, .4) 10%, rgba(138, 114, 76, 0) 40%), -moz-linear-gradient(top, rgba(57, 173, 219, .25) 0%, rgba(42, 60, 87, .4) 100%), -moz-linear-gradient(-45deg, #670d10 0%, #092756 100%);
+            background: -webkit-radial-gradient(0% 100%, ellipse cover, rgba(104, 128, 138, .4) 10%, rgba(138, 114, 76, 0) 40%), -webkit-linear-gradient(top, rgba(57, 173, 219, .25) 0%, rgba(42, 60, 87, .4) 100%), -webkit-linear-gradient(-45deg, #670d10 0%, #092756 100%);
+            background: -o-radial-gradient(0% 100%, ellipse cover, rgba(104, 128, 138, .4) 10%, rgba(138, 114, 76, 0) 40%), -o-linear-gradient(top, rgba(57, 173, 219, .25) 0%, rgba(42, 60, 87, .4) 100%), -o-linear-gradient(-45deg, #670d10 0%, #092756 100%);
+            background: -ms-radial-gradient(0% 100%, ellipse cover, rgba(104, 128, 138, .4) 10%, rgba(138, 114, 76, 0) 40%), -ms-linear-gradient(top, rgba(57, 173, 219, .25) 0%, rgba(42, 60, 87, .4) 100%), -ms-linear-gradient(-45deg, #670d10 0%, #092756 100%);
+            background: -webkit-radial-gradient(0% 100%, ellipse cover, rgba(104, 128, 138, .4) 10%, rgba(138, 114, 76, 0) 40%), linear-gradient(to bottom, rgba(57, 173, 219, .25) 0%, rgba(42, 60, 87, .4) 100%), linear-gradient(135deg, #670d10 0%, #092756 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3E1D6D', endColorstr='#092756', GradientType=1);
+        }
+
+        .search-div {
+            border-radius: 100px;
+            background: black;
+            width: 80%;
+            margin-top: 25px;
+            height: 50px;
+        }
+
+        .search-div > input {
+            color: white;
+            width: 100%;
+            height: 50px;
+            background: none;
+            border: none;
+            outline: none;
+            padding-left: 20px;
+        }
+
+        .search-div > .search-btn {
+            width: 80px;
+            height: 100%;
+            line-height: 50px;
+            font-size: 20px;
+            text-align: center;
+            background: none;
+            border: none;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg" style="height:100vh;color:white;">
+<audio id="music">
+    <source type="audio/mpeg">
+</audio>
+<form action="search">
+    <div class="row g-0 bg" style="height: 100px;">
+        <div class="col-4 text-center" style="font-size: 30px;line-height: 100px;opacity: 0.7;">
+            Dairo MP3
+        </div>
+        <div class="col-8 text-center">
+            <div class="search-div d-flex">
+                <input name="key" placeholder="请输入要搜索的内容" th:value="${param.key}">
+                <button type="submit" class="search-btn" role="button"><i class="bi bi-search"></i></button>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="container">
+    <div class="p-3 d-flex" th:each="item:${searchList}">
+        <img th:src="${item.logo}" style="width: 60px;height: 60px;">
+        <div class="px-3 w-100">
+            <span th:text="${item.name}">歌曲名</span>
+            <div style="width: 100%;">
+                <div progress></div>
+                <input type="hidden" th:value="${item.videoId}">
+                <button class="btn btn-sm btn-outline-light mt-1" onclick="onPlayClick(this);" playcontroller>播放</button>
+                <button class="btn btn-sm btn-outline-light ms-2">下载</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="progressHtml">
+    <div class="d-flex align-items-center mt-3">
+        <span id="currentTime" class="text-center" style="width: 60px;">00:00</span>
+        <div class="w-100">
+            <div class="progress" role="progressbar" aria-valuemin="0"
+                 aria-valuemax="100" style="height:4px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+            </div>
+        </div>
+        <span id="duration" class="text-center" style="width: 60px;">00:00</span>
+        <div id="loading" class="px-2" style="display: none;white-space: nowrap;">
+            <span id="loadedSize"></span>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" style=""></span>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+<script>
+
+    /**
+     * 播放进度部分的html
+     */
+    const progressHtml = $("#progressHtml").html()
+    $("#progressHtml").remove()
+
+    const musicAudio = document.getElementById("music")
+
+    /**
+     * 记录已经播放的时间
+     */
+    let maxCurrentTime = 0
+
+    /**
+     * 播放进度计时器
+     */
+    function progressTimer() {
+        setTimeout(() => {
+            const currentTime = musicAudio.currentTime;
+            let duration = musicAudio.duration;
+
+            if (!isNaN(duration)) {
+                const currentTimeStr = toTime(currentTime)
+                $("#currentTime").text(currentTimeStr)
+
+                let durationStr
+                if(duration === Infinity){//没有获取到总时间
+                    // if(currentTime > maxCurrentTime){
+                    //     maxCurrentTime = currentTime
+                    // }
+                    // duration = maxCurrentTime
+                    durationStr = "--:--"
+                }else{
+                    durationStr = toTime(duration)
+                }
+                $("#duration").text(durationStr)
+
+                const progress = currentTime / duration * 100;
+                $(".progress > div").css("width", `${progress.toFixed(2)}%`)
+            }
+            if (!musicAudio.paused) {//暂停状态结束递归
+
+                //递归调用
+                progressTimer()
+            }
+        }, 1000)
+    }
+
+    /**
+     * 记录正在播放中的视频ID
+     */
+    let playingVideoId = null
+
+    function onPlayClick(obj) {
+        const $controlItem = $(obj).parent()
+
+        //当前点击的视频ID
+        const videoId = $controlItem.find("input").val()
+        if (videoId !== playingVideoId) {//本次操作的歌曲和上次播放的歌曲不一样
+            musicAudio.pause();
+            musicAudio.src = ""
+
+            //清空进度条html
+            $("div[progress]").empty()
+
+            //添加播放进度的html
+            $controlItem.find("div[progress]").append(progressHtml)
+
+            //去加载音频文件
+            loadAudioData(videoId)
+
+            $("button[playcontroller]").text("播放")
+        }
+        playingVideoId = videoId
+        if (musicAudio.paused) {//暂停状态的话播放,否则暂停
+            if(musicAudio.src !== ""){
+                musicAudio.play();
+
+                //播放进度计时器
+                progressTimer();
+            }
+            $(obj).text("暂停")
+        } else {
+            musicAudio.pause();
+            $(obj).text("播放")
+        }
+    }
+
+    /**
+     * 将时间格式化
+     * @param target
+     */
+    function toTime(target) {
+
+        //整数
+        const total = parseInt(target)
+
+        //分
+        const m = parseInt(total / 60)
+
+        //秒
+        const s = total % 60
+        return m + ":" + s.toString().padStart(2, '0')
+    }
+
+    /**
+     *
+     */
+    let xhr = null
+
+    function loadAudioData(videoId){
+        const url = `/download/music?videoId=${videoId}&quality=256`
+
+        if(xhr != null){
+            xhr.abort(); // 取消请求
+        }
+
+        // 使用XMLHttpRequest手动加载音频文件
+        xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.responseType = 'blob';
+        $("#loading").show()
+
+        const $loadedSize = $("#loadedSize")
+        xhr.onprogress = function(event) {
+            const loaded = event.loaded
+            let loadedStr = ""
+            if(loaded > 1024 * 1024){
+                loadedStr = (loaded / 1024 / 1024).toFixed(2) + "M"
+            }else{
+                loadedStr = (loaded / 1024).toFixed(2) + "K"
+            }
+            $loadedSize.text(loadedStr)
+            // if (event.lengthComputable) {
+            //     var percentComplete = (event.loaded / event.total) * 100;
+            //     console.log("Downloaded " + percentComplete + "%");
+            // } else {
+            //     console.log("Download progress is not computable.");
+            // }
+        };
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                // 将音频数据存储在Blob对象中
+                const audioBlob = xhr.response;
+                // 将Blob对象的URL设置为audio元素的src属性
+                musicAudio.src = URL.createObjectURL(audioBlob);
+
+                // 当音频数据准备好时开始播放
+                musicAudio.play();
+
+                setTimeout(()=>{
+
+                    //播放进度计时器
+                    progressTimer();
+                },1)
+
+                $("#loading").hide()
+            }
+        };
+        xhr.send();
+    }
+</script>
+</body>
+</html>
