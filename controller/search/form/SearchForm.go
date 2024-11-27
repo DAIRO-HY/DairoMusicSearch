@@ -8,15 +8,15 @@ type SearchForm struct {
 	/**
 	 * 歌名
 	 */
-	Name string
+	Name string `json:"name"`
 
 	/**
 	 * LOGO
 	 */
-	Logo string
+	Logo string `json:"logo"`
 
 	/**
 	 * 视频ID
 	 */
-	VideoId string
+	VideoId string `json:"videoId"`
 }
