@@ -7,6 +7,9 @@ RUN yes|apt-get upgrade
 RUN apt-get install -y ca-certificates
 RUN update-ca-certificates
 
+#再次更新软件元
+RUN apt-get update
+
 WORKDIR /usr/local
 
 #####################################################################安装YT-DLP#####################################START
