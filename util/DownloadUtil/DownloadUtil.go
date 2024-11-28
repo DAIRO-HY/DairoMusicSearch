@@ -50,7 +50,6 @@ func Download(mp3File string, writer http.ResponseWriter, request *http.Request)
 	if len(ranges) == 0 {
 		start = 0
 		end = size - 1
-		writer.WriteHeader(http.StatusOK)
 	} else {
 		//range格式：bytes=10-30 或者 bytes=10-30
 		rangeArr := strings.Split(strings.ToLower(ranges)[6:], "-")
@@ -72,13 +71,9 @@ func Download(mp3File string, writer http.ResponseWriter, request *http.Request)
 			return
 		}
 		writer.Header().Set("Content-Range", fmt.Sprintf("bytes %d-%d/%d", start, end, size))
-
-		//部分数据的状态值
-		writer.WriteHeader(http.StatusPartialContent)
 	}
-	writer.Header().Set("Content-Length", strconv.FormatInt(end-start+1, 10))
 	writer.Header().Set("Content-Type", "audio/mp3")
-	//writer.Header().Set("Content-Type", "text/plain;charset=UTF-8")
+	writer.Header().Set("Content-Length", strconv.FormatInt(end-start+1, 10))
 
 	//告诉客户端,服务器支持请求部分数据
 	writer.Header().Set("Accept-Ranges", "bytes")
@@ -88,6 +83,13 @@ func Download(mp3File string, writer http.ResponseWriter, request *http.Request)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		return
+	}
+
+	//http.ResponseWriter发送状态码之后，再设置头部信息将会不生效，所以发送状态码一定要等所有头部信息设置完成之后再发送
+	if len(ranges) == 0 {
+		writer.WriteHeader(http.StatusOK)
+	} else {
+		writer.WriteHeader(http.StatusPartialContent)
 	}
 
 	//跳过前面部分数据
@@ -100,9 +102,9 @@ func Download(mp3File string, writer http.ResponseWriter, request *http.Request)
 		needReadLen := int(end - total + 1)
 		n, readErr := file.Read(data)
 		if readErr != nil {
-			if readErr != io.EOF { //如果不是文件读取完成标志,理论上，这里不会发生该异常
-				writer.WriteHeader(http.StatusInternalServerError)
-			}
+			//if readErr != io.EOF { //如果不是文件读取完成标志,理论上，这里不会发生该异常
+			//	writer.WriteHeader(http.StatusInternalServerError)
+			//}
 			break
 		}
 		total += int64(n)

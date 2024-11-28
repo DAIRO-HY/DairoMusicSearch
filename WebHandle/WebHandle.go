@@ -82,6 +82,9 @@ func ApiHandler(controller any) func(writer http.ResponseWriter, request *http.R
 		if body == nil {
 			return
 		}
+		if body == "" {
+			return
+		}
 
 		// 设置 Content-Type 头部信息
 		writer.Header().Set("Content-Type", "text/plain;charset=UTF-8")

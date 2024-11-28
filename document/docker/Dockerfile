@@ -14,8 +14,14 @@ RUN chmod a+rx /usr/local/bin/yt-dlp
 #####################################################################安装YT-DLP#######################################END
 
 
-#YT-DLP依赖ffmpeg
-RUN yes|apt-get -y install ffmpeg
+#安装ffmpeg
+#ADD https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz ffmpeg-release-amd64-static.tar.xz
+ADD ffmpeg-7.0.2-amd64-static.tar.xz .
+
+#制作替身
+RUN ln -s /usr/local/ffmpeg-7.0.2-amd64-static/ffmpeg /usr/local/bin/ffmpeg
+RUN ln -s /usr/local/ffmpeg-7.0.2-amd64-static/ffprobe /usr/local/bin/ffprobe
+
 
 RUN mkdir /app
 WORKDIR /app

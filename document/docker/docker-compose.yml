@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   dairo-music-search:
-    image: dairopapa/dairo-music-search:1.0.0
+    image: dairopapa/dairo-music-search:1.0.1
     #    build: .
     restart: always
     container_name: dairo-music-search
