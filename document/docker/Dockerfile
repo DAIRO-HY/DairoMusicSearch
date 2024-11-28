@@ -5,22 +5,20 @@ RUN yes|apt-get upgrade
 
 WORKDIR /usr/local
 
-#https://github.com/yt-dlp/yt-dlp
 #####################################################################安装YT-DLP#####################################START
+#https://github.com/yt-dlp/yt-dlp
 RUN yes|apt-get install python3
 RUN ln -s /usr/bin/python3 /usr/bin/python
 ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp /usr/local/bin/yt-dlp
 RUN chmod a+rx /usr/local/bin/yt-dlp
 #####################################################################安装YT-DLP#######################################END
 
-
-#安装ffmpeg
+#####################################################################安装FFMPEG#####################################START
 #ADD https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz ffmpeg-release-amd64-static.tar.xz
 ADD ffmpeg-7.0.2-amd64-static.tar.xz .
-
-#制作替身
 RUN ln -s /usr/local/ffmpeg-7.0.2-amd64-static/ffmpeg /usr/local/bin/ffmpeg
 RUN ln -s /usr/local/ffmpeg-7.0.2-amd64-static/ffprobe /usr/local/bin/ffprobe
+#####################################################################安装FFMPEG#####################################END
 
 
 RUN mkdir /app
@@ -45,4 +43,4 @@ ENV MAX_DOWNLOAD_THREAD_COUNT=1
 ENV WEB_PORT=8021
 
 #启动脚本
-ENTRYPOINT /app/dairo-music-search-linux-amd64 -GoogleApiKey:$GOOGLE_API_KEY -CacheFolder:$CACHE_FOLDER -MaxDownloadThreadCount:$MAX_DOWNLOAD_THREAD_COUNT -WebPort:$WEB_PORT
+ENTRYPOINT /app/dairo-music-search-linux-amd64 GoogleApiKey:$GOOGLE_API_KEY CacheFolder:$CACHE_FOLDER MaxDownloadThreadCount:$MAX_DOWNLOAD_THREAD_COUNT WebPort:$WEB_PORT
