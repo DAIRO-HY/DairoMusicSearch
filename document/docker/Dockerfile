@@ -3,6 +3,10 @@ MAINTAINER zhoulq<1064348912@qq.com>
 RUN apt-get update
 RUN yes|apt-get upgrade
 
+#更新CA证书，解决google api访问证书报错的BUG
+RUN apt-get install -y ca-certificates
+RUN update-ca-certificates
+
 WORKDIR /usr/local
 
 #####################################################################安装YT-DLP#####################################START
