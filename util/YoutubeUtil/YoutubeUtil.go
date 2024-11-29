@@ -92,7 +92,6 @@ func RequestCollectMusic(videoId string) {
 		log.Println(errResult)
 		return
 	}
-	log.Println("采集完成")
 }
 
 /**

@@ -94,7 +94,10 @@ func ExecToReader(command string, reader func(io.ReadCloser), errReader func(io.
 	cmdArr := parseCmd(command)
 	cmd := exec.Command(cmdArr[0], cmdArr[1:]...)
 	stdout, err := cmd.StdoutPipe()
+	defer stdout.Close()
 	stderr, err := cmd.StderrPipe()
+	defer stderr.Close()
+
 	if err != nil {
 		return err
 	}
