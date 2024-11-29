@@ -19,10 +19,10 @@ func renderTemplate(w http.ResponseWriter, tmpl string) {
 	// 解析嵌入的模板
 	t, err := template.ParseFS(templatesFiles,
 		"templates/"+tmpl,
-		"templates/include/head.html",
-		"templates/include/top-bar.html",
-		"templates/include/data_size_chart.html",
-		"templates/include/speed_chart.html",
+		//"templates/include/head.html",
+		//"templates/include/top-bar.html",
+		//"templates/include/data_size_chart.html",
+		//"templates/include/speed_chart.html",
 	)
 	if err != nil {
 		http.Error(w, "Error loading template", http.StatusInternalServerError)
@@ -174,8 +174,8 @@ func Start() {
 	//fs := http.FileServer(http.FS(staticFiles))
 	//http.Handle("/static/", fs)
 	//
-	//// 设置路由
-	//http.HandleFunc("/", htmlHandler)
+	// 设置路由
+	http.HandleFunc("/", htmlHandler)
 
 	port := config.WebPort
 
