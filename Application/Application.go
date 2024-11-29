@@ -2,6 +2,7 @@ package Application
 
 import (
 	"DairoMusicSearch/config"
+	"DairoMusicSearch/util/LogUtil"
 	"fmt"
 	"log"
 	"os"
@@ -16,6 +17,7 @@ func Init() {
 		fmt.Println(it)
 	}
 	fmt.Println("------------------------------------------------------------------------")
+	LogUtil.Info("项目启动成功")
 	for _, it := range os.Args {
 		paramArr := strings.Split(it, ":")
 		switch paramArr[0] {

@@ -1,7 +1,7 @@
 package config
 
 // 版本号
-const VERSION = "1.0.3"
+const VERSION = "1.0.4"
 
 // 谷歌开发者KEY
 var GoogleApiKey = ""

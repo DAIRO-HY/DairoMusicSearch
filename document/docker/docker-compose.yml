@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   dairo-music-search:
-    image: dairopapa/dairo-music-search:1.0.2
+    image: dairopapa/dairo-music-search:1.0.3
     #    build: .
     restart: always
     container_name: dairo-music-search
@@ -22,3 +22,5 @@ services:
       MAX_DOWNLOAD_THREAD_COUNT: 1
       #WEB端口
       WEB_PORT: 8021
+    volumes:
+      - ./data:/app/data

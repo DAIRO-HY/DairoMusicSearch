@@ -12,6 +12,7 @@ func Init() {
 }
 
 func cookie(request *http.Request) string {
+
 	//解析post表单
 	err := request.ParseForm()
 	if err != nil {
@@ -21,7 +22,7 @@ func cookie(request *http.Request) string {
 
 	//得到cookie内容
 	cookieTxt := postForm.Get("cookie")
-	file, err := os.OpenFile("./youtube-cookie.txt", os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile("./data/youtube-cookie.txt", os.O_CREATE|os.O_WRONLY, 0644)
 	defer file.Close()
 	if err != nil {
 		return err.Error()
