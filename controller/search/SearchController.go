@@ -1,7 +1,6 @@
 package search
 
 import (
-	"DairoMusicSearch/WebHandle"
 	"DairoMusicSearch/config"
 	"DairoMusicSearch/controller/search/form"
 	"github.com/tidwall/gjson"
@@ -11,36 +10,18 @@ import (
 	"strconv"
 )
 
-// 路由设置
-func Init() {
-	http.HandleFunc("/search/api", WebHandle.ApiHandler(api))
-}
-
-/**
- * 音乐搜索页面
- * @param key 搜索关键字
- */
-//@GetMapping
-//fun init(request: HttpServletRequest, key: String?): String {
-//    if (key.isNullOrBlank()) {
-//        return "search"
-//    }
-//    val list = this.searchApi(key)
-//    request.setAttribute("searchList", list)
-//    return "search"
-//}
-
 /**
  * 音乐搜索API
  * @param key 搜索关键字
  */
-func api(request *http.Request, inForm form.ApiInForm) any {
-	if len(inForm.Key) == 0 {
+//GET:/search/api
+func Api(request *http.Request, key string) any {
+	if len(key) == 0 {
 		return []form.SearchForm{}
 	}
 
 	//将搜索关键字编码
-	q := url.QueryEscape(inForm.Key)
+	q := url.QueryEscape(key)
 
 	//显示最大检索结果
 	const limit = 30

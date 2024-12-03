@@ -1,7 +1,6 @@
 package download
 
 import (
-	"DairoMusicSearch/WebHandle"
 	"DairoMusicSearch/extension/Number"
 	"DairoMusicSearch/util/DownloadUtil"
 	"DairoMusicSearch/util/YoutubeUtil"
@@ -12,94 +11,13 @@ import (
 	"time"
 )
 
-// 路由设置
-func Init() {
-	http.HandleFunc("/d/collect_info", WebHandle.ApiHandler(musicCollectInfo))
-	http.HandleFunc("/d/music", WebHandle.ApiHandler(music))
-	http.HandleFunc("/d/lrc", WebHandle.ApiHandler(lrc))
-	http.HandleFunc("/d/proxy", WebHandle.ApiHandler(proxy))
-}
-
-func test(writer http.ResponseWriter, request *http.Request) {
-
-	//range123 := request.Header.Get("range")
-	//log.Println(range123)
-	//
-	//// 设置 Content-Type 头部信息
-	//writer.Header().Set("Content-Type", "text/plain;charset=UTF-8")
-	//writer.WriteHeader(http.StatusOK) // 设置状态码
-	//writer.Write([]byte("SUCCESS"))
-
-	//download("C:\\develop\\ideaIU-2024.1.2.win.zip", writer, request)
-}
-
-//    /**
-//     * 下载音乐
-//     * @param videoId 视频ID
-//     * @param quality 音质 单位比特率
-//     */
-//    @CrossOrigin(origins = ["*"])
-//    @GetMapping("/music")
-//    fun music(request: HttpServletRequest, response: HttpServletResponse, videoId: String, quality: Int? = null) {
-//        response.resetBuffer()
-//
-//        val os = System.getProperty("os.name").lowercase(Locale.getDefault())
-//        if (os.contains("win")) {//测试用
-//            response.status = HttpStatus.OK.value()
-//            response.addHeader("Content-Type", "audio/mp3")
-//            DownloadController::class.java.classLoader.getResource("test.mp3").openStream().use {
-//                it.transferTo(response.outputStream)
-//            }
-//            return
-//        }
-//
-//        val range = request.getHeader("range")
-//        if(!range.isNullOrEmpty() && range != "bytes=0-"){//不支持选择范围
-//            response.status = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE.value()
-//            return
-//        }
-//        response.resetBuffer()
-//
-//        //客户端输出流
-//        val oStream = response.outputStream
-//        val error = YoutubeUtil.getMusic(videoId, quality) {
-//            response.status = HttpStatus.OK.value()
-//            response.addHeader("Content-Type", "audio/mp3")
-//            it.transferTo(oStream)
-//        }
-//        if (error != null) {
-//            response.status = HttpStatus.SERVICE_UNAVAILABLE.value()
-//            response.addHeader("Content-Type", "text/plain")
-//            oStream.write(error.toByteArray())
-//        }
-//    }
-
-//    /**
-//     * 下载音乐
-//     * @param videoId 视频ID
-//     */
-//    @CrossOrigin(origins = ["*"])
-//    @ResponseBody
-//    @GetMapping("/music_info/{videoId}")
-//    fun musicInfo(@PathVariable("videoId") videoId: String): AudioInfo? {
-//
-//        //得到mp3文件
-//        val mp3File = this.youtube.getMusic(videoId)
-//        val info = this.cacheFile.getMp3Info(mp3File)
-//        return info
-//    }
-
 /**
  * 音乐采集情况并发起采集请求
  * @param videoId 视频ID
  */
-//@GetMapping("/music/{videoId}/collect_info")
-func musicCollectInfo(request *http.Request) string {
+//GET:/d/collect_info
+func MusicCollectInfo(videoId string) string {
 	rootFolder := YoutubeUtil.RootDir()
-	query := request.URL.Query()
-
-	//得到视频ID
-	videoId := query.Get("videoId")
 
 	//获取开始采集时间
 	collectStartTime := YoutubeUtil.GetCollectStartTime(videoId)
@@ -152,50 +70,14 @@ func musicCollectInfo(request *http.Request) string {
 		return "正在采集:" + size + "(" + collectTimer + ")"
 	}
 	return ""
-
-	//if (musicFileList.isNullOrEmpty()) {
-	//
-	//    //请求开始采集
-	//    this.youtube.requestCollectMusic(videoId)
-	//    val downloadingThreadCount = this.youtube.collectingCount
-	//    if (downloadingThreadCount == 0) {
-	//        return "准备采集$collectTimer"
-	//    }
-	//    return "准备采集$collectTimer,当前采集数:${downloadingThreadCount}"
-	//}
-
-	////正在下载中的文件
-	//val downloadingFile = musicFileList.find { it.name.endsWith(".part") }
-	//if (downloadingFile != null) {
-	//    return "正在采集:${downloadingFile.length().dataSize}($collectTimer)"
-	//}
-	//if (collectStartTime != null) {//采集中
-	//
-	//    // 转码中
-	//    val mp3File = musicFileList.find { it.name.endsWith(".mp3") } ?: return "准备转码($collectTimer)"
-	//    return "正在转码:${mp3File.length().dataSize}($collectTimer)"
-	//}else{//采集已经完成
-	//
-	//    //正在下载中的文件
-	//    val mp3File = musicFileList.find { it.name == "$videoId.mp3" }
-	//    if (mp3File != null) {//转码完成
-	//        return "OK"
-	//    }
-	//}
-
-	//未知结果
-	//return "UNKNOWN:" + musicFileList.joinToString { it.name }
 }
 
 /**
  * 下载音乐
  * @param videoId 视频ID
  */
-func music(writer http.ResponseWriter, request *http.Request) string {
-	query := request.URL.Query()
-
-	//得到视频ID
-	videoId := query.Get("videoId")
+//GET:/d/music
+func Music(writer http.ResponseWriter, request *http.Request, videoId string) string {
 	if strings.HasSuffix(videoId, "/collect_info") { //这里兼容旧版本，这是一个获取采集信息的url
 		videoId = strings.ReplaceAll(videoId, "/collect_info", "")
 		rootFolder := YoutubeUtil.RootDir()
@@ -261,52 +143,16 @@ func music(writer http.ResponseWriter, request *http.Request) string {
 	return ""
 }
 
-//
-//    /**
-//     * 下载音乐
-//     * @param videoId 视频ID
-//     */
-//    @CrossOrigin(origins = ["*"])
-//    @GetMapping("/video/{videoId}")
-//    fun video(request: HttpServletRequest, response: HttpServletResponse, @PathVariable("videoId") videoId: String, size: Int?) {
-//        val range = request.getHeader("range")
-//        if (!range.isNullOrEmpty() && range != "bytes=0-") {//不支持选择范围
-//            response.status = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE.value()
-//            return
-//        }
-//        response.resetBuffer()
-//
-//        //客户端输出流
-//        val oStream = response.outputStream
-//        val error = this.youtube.getVideo(videoId, size) {
-//            response.status = HttpStatus.OK.value()
-//            response.addHeader("Content-Type", "video/webm")
-//            it.transferTo(oStream)
-//        }
-//        if (error != null) {
-//            response.status = HttpStatus.SERVICE_UNAVAILABLE.value()
-//            response.addHeader("Content-Type", "text/plain")
-//            oStream.write(error.toByteArray())
-//        }
-//    }
-//
-
-// 下载歌词
-func lrc(request *http.Request) string {
-	query := request.URL.Query()
-
-	//得到视频ID
-	videoId := query.Get("videoId")
+// Lrc 下载歌词
+// GET:/d/lrc
+func Lrc(videoId string) string {
 	return YoutubeUtil.GetLRC(videoId)
 }
 
-// 代理下载图片
-func proxy(writer http.ResponseWriter, request *http.Request) any {
-	query := request.URL.Query()
-
-	//得到视频ID
-	targetUrl := query.Get("url")
-	resp, err := http.Get(targetUrl)
+// Proxy 代理下载图片
+// GET:/d/proxy
+func Proxy(writer http.ResponseWriter, url string) any {
+	resp, err := http.Get(url)
 	defer resp.Body.Close()
 	if err != nil {
 		return err

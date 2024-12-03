@@ -1,17 +1,12 @@
 package set
 
 import (
-	"DairoMusicSearch/WebHandle"
 	"net/http"
 	"os"
 )
 
-// 路由设置
-func Init() {
-	http.HandleFunc("/set/cookie", WebHandle.ApiHandler(cookie))
-}
-
-func cookie(request *http.Request) string {
+// POST:/set/cookie
+func Cookie(request *http.Request) string {
 
 	//解析post表单
 	err := request.ParseForm()
