@@ -3,12 +3,12 @@ MAINTAINER zhoulq<1064348912@qq.com>
 RUN apt-get update
 RUN yes|apt-get upgrade
 
-##更新CA证书，解决google api访问证书报错的BUG
-#RUN apt-get install -y ca-certificates
-#RUN update-ca-certificates
-#
-##再次更新软件元
-#RUN apt-get update
+#更新CA证书，解决google api访问证书报错的BUG
+RUN apt-get install -y ca-certificates
+RUN update-ca-certificates
+
+#再次更新软件元
+RUN apt-get update
 
 WORKDIR /usr/local
 
@@ -33,7 +33,7 @@ WORKDIR /app
 
 #下载程序
 #ADD https://github.com/DAIRO-HY/DairoNPC/releases/download/1.0.0/dairo-npc-linux-amd64 /app
-COPY dairo-music-search-linux-amd64 /app/dairo-music-search-linux-amd64
+#COPY dairo-music-search-linux-amd64 /app/dairo-music-search-linux-amd64
 
 #授权可执行
 RUN chmod +x dairo-music-search-linux-amd64
