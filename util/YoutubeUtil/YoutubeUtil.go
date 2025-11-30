@@ -83,7 +83,7 @@ func RequestCollectMusic(videoId string) {
 	collectVideoIdMap[videoId] = time.Now().UnixMilli()
 	lock.Unlock()
 
-	cmd := "yt-dlp --cookies ./data/youtube-cookie.txt --no-check-certificate -x --audio-format mp3 --audio-quality 0 -o \"" + mp3File + "\" https://www.youtube.com/watch?v=" + videoId + ""
+	cmd := `yt-dlp --cookies ./data/youtube-cookie.txt --no-check-certificate -x --audio-format mp3 --audio-quality 0 -o "` + mp3File + `" "https://www.youtube.com/watch?v=` + videoId + `"`
 	_, errResult, _ := ShellUtil.ExecToResult(cmd)
 	lock.Lock()
 	delete(collectVideoIdMap, videoId)
@@ -100,7 +100,7 @@ func RequestCollectMusic(videoId string) {
  */
 func GetLRC(videoId string) string {
 	folder := config.CacheFolder + "/lrc/" + videoId
-	command := "yt-dlp --cookies ./data/youtube-cookie.txt --no-check-certificate --write-subs --sub-lang all --skip-download https://www.youtube.com/watch?v=" + videoId + " -o \"" + folder + "/lrc\""
+	command := `yt-dlp --cookies ./data/youtube-cookie.txt --no-check-certificate --write-subs --sub-lang all --skip-download "https://www.youtube.com/watch?v=` + videoId + `" -o "` + folder + `/lrc"`
 	_, errResult, _ := ShellUtil.ExecToResult(command)
 	if errResult != "" { //采集失败
 		log.Println(errResult)
