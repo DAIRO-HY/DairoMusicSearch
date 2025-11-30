@@ -33,7 +33,7 @@ WORKDIR /app
 
 #下载程序
 #ADD https://github.com/DAIRO-HY/DairoNPC/releases/download/1.0.0/dairo-npc-linux-amd64 /app
-#COPY dairo-music-search-linux-amd64 /app/dairo-music-search-linux-amd64
+COPY dairo-music-search-linux-amd64 /app/dairo-music-search-linux-amd64
 
 #授权可执行
 RUN chmod +x dairo-music-search-linux-amd64
