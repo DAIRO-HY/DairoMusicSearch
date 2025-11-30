@@ -146,7 +146,7 @@ echo "上传文件dairo-music-search-mac-arm64结果:${upload_file_api_response}
 echo "正在打包Docker镜像..."
 mv ./build/dairo-music-search-linux-amd64 ./document/docker/
 cd ./document/docker/
-docker build -t $docker_user/dairo-music-search:$version .
+docker build --no-cache --network=host -t $docker_user/dairo-music-search:$version .
 docker login -u $docker_user --password $docker_pwd
 docker push $docker_user/dairo-music-search:$version
 docker logout
